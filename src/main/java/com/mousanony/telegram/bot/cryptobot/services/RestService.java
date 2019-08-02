@@ -6,8 +6,11 @@ import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mousanony.telegram.bot.cryptobot.dto.Coin;
+import com.mousanony.telegram.bot.cryptobot.dto.ExtendedCoin;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,11 +20,13 @@ import java.util.List;
 class RestService {
 
     private static final String GET_ALL_COIN_URL = "https://api.coinmarketcap.com/v1/ticker/";
+    private static final String CONVERT_TO_USD_COIN_URL = "https://api.coinmarketcap.com/v1/ticker/id";
     private static final String CONVERT_COIN_URL = "https://api.coinmarketcap.com/v1/ticker/id/?convert=symbol";
 
+    private ObjectMapper objectMapper;
 
     RestService() {
-        Unirest.setObjectMapper(new ObjectMapper() {
+        objectMapper = new ObjectMapper() {
             com.fasterxml.jackson.databind.ObjectMapper mapper
                     = new com.fasterxml.jackson.databind.ObjectMapper();
 
@@ -40,7 +45,8 @@ class RestService {
                     throw new RuntimeException(e);
                 }
             }
-        });
+        };
+        Unirest.setObjectMapper(objectMapper);
         Unirest.setDefaultHeader("accept", "application/json");
     }
 
@@ -50,9 +56,30 @@ class RestService {
         return Arrays.asList(httpResponse.getBody());
     }
 
-    Coin getPrice(String coinID, String targetCoin) {
+    Coin getUsdPrice(String coinID, String targetCoin) {
         try {
-            return Unirest.get(CONVERT_COIN_URL.replace("id", coinID).replace("symbol", targetCoin)).asObject(Coin[].class).getBody()[0];
+            return Unirest.get(CONVERT_TO_USD_COIN_URL.replace("id", coinID)).asObject(Coin[].class).getBody()[0];
+        } catch (UnirestException e) {
+            //TODO logging
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    ExtendedCoin getPrice(String coinID, String targetCoin) {
+        try {
+            JSONObject json = (JSONObject) Unirest.get(CONVERT_COIN_URL
+                    .replace("id", coinID)
+                    .replace("symbol", targetCoin))
+                    .asJson()
+                    .getBody()
+                    .getArray()
+                    .get(0);
+
+            BigDecimal amount = new BigDecimal(String.valueOf(json.get("price_" + targetCoin.toLowerCase())));
+            Coin coin = objectMapper.readValue(json.toString(), Coin.class);
+
+            return new ExtendedCoin(coin, amount, targetCoin);
         } catch (UnirestException e) {
             //TODO logging
             e.printStackTrace();

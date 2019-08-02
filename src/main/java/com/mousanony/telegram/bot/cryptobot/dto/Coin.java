@@ -3,6 +3,7 @@ package com.mousanony.telegram.bot.cryptobot.dto;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
@@ -16,7 +17,7 @@ public class Coin {
     private String symbol;
     private Integer rank;
     @JsonAlias("price_usd")
-    private String priceUsd;
+    private BigDecimal priceUsd;
     @JsonAlias("price_btc")
     private String priceBtc;
     @JsonAlias("percent_change_1h")
@@ -30,13 +31,30 @@ public class Coin {
 
     private static final DecimalFormat formatter = new DecimalFormat();
 
+    public Coin() {
+    }
+
+    public Coin(Coin coin) {
+        this.id = coin.id;
+        this.name = coin.name;
+        this.symbol = coin.symbol;
+        this.rank = coin.rank;
+        this.priceUsd = coin.priceUsd;
+        this.priceBtc = coin.priceBtc;
+        this.percentChange1H = coin.percentChange1H;
+        this.percentChange24H = coin.percentChange24H;
+        this.percentChange7D = coin.percentChange7D;
+        this.marketCapUsd = coin.marketCapUsd;
+    }
+
+    public Coin(String id, String name, String symbol, Integer rank, String priceUsd, String priceBtc, String percentChange1H, String percentChange24H, String percentChange7D, String marketCapUsd) {
+
+    }
+
     static {
         DecimalFormatSymbols formatSymbols = formatter.getDecimalFormatSymbols();
         formatSymbols.setGroupingSeparator(' ');
         formatter.setDecimalFormatSymbols(formatSymbols);
-    }
-
-    public Coin() {
     }
 
     public String getMarketCapUsd() {
@@ -80,11 +98,11 @@ public class Coin {
         this.rank = rank;
     }
 
-    public String getPriceUsd() {
+    public BigDecimal getPriceUsd() {
         return priceUsd;
     }
 
-    public void setPriceUsd(String priceUsd) {
+    public void setPriceUsd(BigDecimal priceUsd) {
         this.priceUsd = priceUsd;
     }
 

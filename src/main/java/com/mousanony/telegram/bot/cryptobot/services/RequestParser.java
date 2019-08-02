@@ -2,6 +2,7 @@ package com.mousanony.telegram.bot.cryptobot.services;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mousanony.telegram.bot.cryptobot.dto.Coin;
+import com.mousanony.telegram.bot.cryptobot.dto.ExtendedCoin;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.math.BigDecimal;
@@ -52,11 +53,11 @@ public class RequestParser {
 
         List<String> splitRequest = Arrays.asList(message.getText().toUpperCase().split(" "));
 
-        BigDecimal amountToCalculate = null;
+        BigDecimal count = null;
 
         //эта штука универсальная
         if (isContainsDigit(splitRequest.get(0))) {
-            amountToCalculate = new BigDecimal(splitRequest.get(0));
+            count = new BigDecimal(splitRequest.get(0));
             splitRequest.remove(0);
         }
 
@@ -65,18 +66,22 @@ public class RequestParser {
             return response.withError("I don't know this coin.");
         }
 
-        //check target coin
+        //get custom price
         if (splitRequest.size() == 2) {
             if (isValidCoin(splitRequest.get(1)) || isValidCurrency(splitRequest.get(1))) {
-                Coin coin = restService.getPrice(coinSymbolAndIdMap.get(splitRequest.get(0)), splitRequest.get(1));
+                ExtendedCoin coin = restService.getPrice(coinSymbolAndIdMap.get(splitRequest.get(0)), splitRequest.get(1));
+                coin.calculateAmount(count);
                 return response.withCoin(coin);
             }
         }
 
-        restService.getPrice(coinSymbolAndIdMap.get(splitRequest.get(0)), "USD");
+        //get usd price
+        restService.getUsdPrice(coinSymbolAndIdMap.get(splitRequest.get(0)), "USD");
 
         return response;
     }
+
+
 
     private boolean isValidCoin(String coinToCheck) {
         return availableCoin.stream().anyMatch(coin -> coin.getSymbol().equals(coinToCheck));

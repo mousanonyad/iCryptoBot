@@ -28,11 +28,14 @@ public class RestServiceTest {
     }
 
     @Test
-    public void testGetPrice() {
-        Coin litecoin = restService.getPrice("litecoin", "USD");
+    public void testGetUSDPrice() {
+        Coin litecoin = restService.getUsdPrice("litecoin", "USD");
         assertEquals(litecoin.getSymbol(), "LTC");
+    }
 
-        Coin ethereum = restService.getPrice("ethereum", "BTC");
-        assertEquals(ethereum.getSymbol(), "ETH");
+    @Test
+    public void testGetPrice() {
+        Coin litecoin = restService.getPrice("litecoin", "RUB");
+        assertEquals(litecoin.getSymbol(), "LTC");
     }
 }
