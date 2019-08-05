@@ -1,8 +1,7 @@
 package com.mousanony.telegram.bot.cryptobot.services;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mousanony.telegram.bot.cryptobot.dto.Coin;
-import com.mousanony.telegram.bot.cryptobot.dto.ExtendedCoin;
+import com.mousanony.telegram.bot.cryptobot.dto.ICoin;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.math.BigDecimal;
@@ -22,7 +21,7 @@ public class RequestParser {
             "AUD", "BRL", "CAD", "CHF", "CNY", "EUR", "GBP",
             "HKD", "IDR", "INR", "JPY", "KRW", "MXN", "RUB");
 
-    private List<Coin> availableCoin;
+    private List<ICoin> availableCoins;
 
     private Map<String, String> coinSymbolAndIdMap;
 
@@ -36,13 +35,13 @@ public class RequestParser {
 
     public void updateAvailableCoins() {
         try {
-            this.availableCoin = restService.getAvailableCoins();
+            this.availableCoins = restService.getAvailableCoins();
         } catch (UnirestException e) {
             //TODO logging
             e.printStackTrace();
         }
 
-        coinSymbolAndIdMap = availableCoin.stream().collect(Collectors.toMap(Coin::getSymbol, Coin::getId));
+        coinSymbolAndIdMap = availableCoins.stream().collect(Collectors.toMap(ICoin::getSymbol, ICoin::getId));
     }
 
 
@@ -66,25 +65,25 @@ public class RequestParser {
             return response.withError("I don't know this coin.");
         }
 
-        //get custom price
-        if (splitRequest.size() == 2) {
-            if (isValidCoin(splitRequest.get(1)) || isValidCurrency(splitRequest.get(1))) {
-                ExtendedCoin coin = restService.getPrice(coinSymbolAndIdMap.get(splitRequest.get(0)), splitRequest.get(1));
-                coin.calculateAmount(count);
-                return response.withCoin(coin);
-            }
-        }
-
+        ICoin coin;
+        //need custom price?
+        if (splitRequest.size() == 2 && (isValidCoin(splitRequest.get(1)) || isValidCurrency(splitRequest.get(1)))) {
+            coin = restService.getCustomPrice(coinSymbolAndIdMap.get(splitRequest.get(0)), splitRequest.get(1));
+            calculateAmount(coin, count);
         //get usd price
-        restService.getUsdPrice(coinSymbolAndIdMap.get(splitRequest.get(0)), "USD");
-
-        return response;
+        } else {
+            coin = restService.getUsdPrice(coinSymbolAndIdMap.get(splitRequest.get(0)));
+        }
+        calculateAmount(coin, count);
+        return response.withCoin(coin);
     }
 
-
+    private void calculateAmount(ICoin coin, BigDecimal count) {
+        coin.setAmount(coin.getPrice().multiply(count != null ? count : BigDecimal.ONE));
+    }
 
     private boolean isValidCoin(String coinToCheck) {
-        return availableCoin.stream().anyMatch(coin -> coin.getSymbol().equals(coinToCheck));
+        return availableCoins.stream().anyMatch(coin -> coin.getSymbol().equals(coinToCheck));
     }
 
     private boolean isValidCurrency(String currencyToCheck) {

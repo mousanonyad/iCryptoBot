@@ -1,7 +1,7 @@
 package com.mousanony.telegram.bot.cryptobot.services;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mousanony.telegram.bot.cryptobot.dto.Coin;
+import com.mousanony.telegram.bot.cryptobot.dto.ICoin;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -23,19 +23,20 @@ public class RestServiceTest {
 
     @Test
     public void testGetAvailableCrypto() throws UnirestException {
-        List<Coin> availableCoins = restService.getAvailableCoins();
-        assertEquals(availableCoins.size(), 100);
+        List<ICoin> availableICoins = restService.getAvailableCoins();
+        assertEquals(availableICoins.size(), 100);
     }
 
     @Test
     public void testGetUSDPrice() {
-        Coin litecoin = restService.getUsdPrice("litecoin", "USD");
+        ICoin litecoin = restService.getUsdPrice("litecoin");
         assertEquals(litecoin.getSymbol(), "LTC");
     }
 
     @Test
     public void testGetPrice() {
-        Coin litecoin = restService.getPrice("litecoin", "RUB");
+        ICoin litecoin = restService.getCustomPrice("litecoin", "RUB");
         assertEquals(litecoin.getSymbol(), "LTC");
+        assertEquals(litecoin.getCustomSymbol(), "RUB");
     }
 }

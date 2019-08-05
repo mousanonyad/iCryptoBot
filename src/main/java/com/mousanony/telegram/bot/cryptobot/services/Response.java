@@ -1,38 +1,15 @@
 package com.mousanony.telegram.bot.cryptobot.services;
 
-import com.mousanony.telegram.bot.cryptobot.dto.Coin;
-import com.mousanony.telegram.bot.cryptobot.dto.ExtendedCoin;
-
-import java.math.BigDecimal;
+import com.mousanony.telegram.bot.cryptobot.dto.ICoin;
 
 /**
  * @author mousanonyad
  */
 public class Response {
     private String error;
-    private Coin coin;
-    private BigDecimal priceCustom;
-    private BigDecimal calculatedAmount;
-    private String targetCoinSymbol;
+    private ICoin coin;
 
-    public BigDecimal getPriceCustom() {
-        return priceCustom;
-    }
-
-    public String getTargetCoinSymbol() {
-        return targetCoinSymbol;
-    }
-
-    public BigDecimal getCalculatedAmount() {
-        return calculatedAmount;
-    }
-
-    public void calculateAmount(BigDecimal count) {
-//        if (priceCustom != null ? priceCustom.multiply(count != null ? count : BigDecimal.ONE) : coin.getPriceUsd())
-        this.calculatedAmount = priceCustom.multiply(count != null ? count : BigDecimal.ONE);
-    }
-
-    public Response withError(String error) {
+    Response withError(String error) {
         this.error = error;
         return this;
     }
@@ -41,12 +18,12 @@ public class Response {
         return error;
     }
 
-    public Response withCoin(Coin coin) {
+    Response withCoin(ICoin coin) {
         this.coin = coin;
         return this;
     }
 
-    public Coin getCoin() {
+    public ICoin getCoin() {
         return coin;
     }
 

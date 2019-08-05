@@ -7,29 +7,23 @@ import java.math.BigDecimal;
  */
 public class ExtendedCoin extends Coin {
     private BigDecimal priceCustom;
-    private BigDecimal calculatedAmount;
-    private String targetCoinSymbol;
+    private String customSymbol;
 
-    public ExtendedCoin(Coin coin, BigDecimal priceCustom, String targetCoinSymbol) {
+    public ExtendedCoin(Coin coin, BigDecimal priceCustom, String customSymbol) {
         super(coin);
         this.priceCustom = priceCustom;
-        this.targetCoinSymbol = targetCoinSymbol;
+        this.customSymbol = customSymbol;
     }
 
-    public BigDecimal getPriceCustom() {
+    @Override
+    public String getCustomSymbol() {
+        return customSymbol;
+    }
+
+    @Override
+    public BigDecimal getPrice() {
         return priceCustom;
     }
 
-    public String getTargetCoinSymbol() {
-        return targetCoinSymbol;
-    }
 
-    public BigDecimal getCalculatedAmount() {
-        return calculatedAmount;
-    }
-
-    public ExtendedCoin calculateAmount(BigDecimal count) {
-        this.calculatedAmount = priceCustom.multiply(count != null ? count : BigDecimal.ONE);
-        return this;
-    }
 }

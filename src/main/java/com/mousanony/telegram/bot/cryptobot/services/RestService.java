@@ -7,6 +7,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mousanony.telegram.bot.cryptobot.dto.Coin;
 import com.mousanony.telegram.bot.cryptobot.dto.ExtendedCoin;
+import com.mousanony.telegram.bot.cryptobot.dto.ICoin;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -50,13 +51,13 @@ class RestService {
         Unirest.setDefaultHeader("accept", "application/json");
     }
 
-    List<Coin> getAvailableCoins() throws UnirestException {
-        HttpResponse<Coin[]> httpResponse = Unirest.get(GET_ALL_COIN_URL).asObject(Coin[].class);
+    List<ICoin> getAvailableCoins() throws UnirestException {
+        HttpResponse<ICoin[]> httpResponse = Unirest.get(GET_ALL_COIN_URL).asObject(Coin[].class);
 
         return Arrays.asList(httpResponse.getBody());
     }
 
-    Coin getUsdPrice(String coinID, String targetCoin) {
+    ICoin getUsdPrice(String coinID) {
         try {
             return Unirest.get(CONVERT_TO_USD_COIN_URL.replace("id", coinID)).asObject(Coin[].class).getBody()[0];
         } catch (UnirestException e) {
@@ -66,7 +67,7 @@ class RestService {
         }
     }
 
-    ExtendedCoin getPrice(String coinID, String targetCoin) {
+    ICoin getCustomPrice(String coinID, String targetCoin) {
         try {
             JSONObject json = (JSONObject) Unirest.get(CONVERT_COIN_URL
                     .replace("id", coinID)
