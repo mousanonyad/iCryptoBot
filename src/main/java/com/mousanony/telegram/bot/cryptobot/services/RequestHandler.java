@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * @author mousanonyad
  */
-public class RequestParser {
+public class RequestHandler {
 
     private static final Pattern PATTERN = Pattern.compile("^\\d*\\.?\\d$");
     private static final List<String> availableCurrencies = Arrays.asList(
@@ -27,7 +27,7 @@ public class RequestParser {
 
     private RestService restService;
 
-    public RequestParser() {
+    public RequestHandler() {
         this.restService = new RestService();
         updateAvailableCoins();
 
@@ -53,8 +53,6 @@ public class RequestParser {
         List<String> splitRequest = Arrays.asList(message.getText().toUpperCase().split(" "));
 
         BigDecimal count = null;
-
-        //эта штука универсальная
         if (isContainsDigit(splitRequest.get(0))) {
             count = new BigDecimal(splitRequest.get(0));
             splitRequest.remove(0);

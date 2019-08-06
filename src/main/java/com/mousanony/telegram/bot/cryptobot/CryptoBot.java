@@ -1,6 +1,6 @@
 package com.mousanony.telegram.bot.cryptobot;
 
-import com.mousanony.telegram.bot.cryptobot.services.RequestParser;
+import com.mousanony.telegram.bot.cryptobot.services.RequestHandler;
 import com.mousanony.telegram.bot.cryptobot.services.Response;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
@@ -13,11 +13,11 @@ import static org.telegram.abilitybots.api.objects.Privacy.PUBLIC;
  */
 public class CryptoBot extends AbilityBot {
 
-    private RequestParser requestParser;
+    private RequestHandler requestHandler;
 
     CryptoBot(String botToken, String botUsername) {
         super(botToken, botUsername);
-        requestParser = new RequestParser();
+        requestHandler = new RequestHandler();
     }
 
     public int creatorId() {
@@ -32,7 +32,7 @@ public class CryptoBot extends AbilityBot {
                 .locality(ALL)
                 .privacy(PUBLIC)
                 .action(ctx -> {
-                    Response response = requestParser.parseStringMessage(ctx.update().getMessage());
+                    Response response = requestHandler.parseStringMessage(ctx.update().getMessage());
 
                     if (response.isError()) {
                         silent.send(response.getError(), ctx.chatId());

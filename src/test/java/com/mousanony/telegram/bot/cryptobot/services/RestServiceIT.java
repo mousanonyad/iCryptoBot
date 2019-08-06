@@ -12,7 +12,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author mousanonyad
  */
-public class RestServiceTest {
+public class RestServiceIT {
 
     private RestService restService;
 
