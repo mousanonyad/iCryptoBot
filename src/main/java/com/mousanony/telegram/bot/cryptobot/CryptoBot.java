@@ -36,9 +36,9 @@ public class CryptoBot extends AbilityBot {
 
                     if (response.isError()) {
                         silent.send(response.getError(), ctx.chatId());
-                    } else {
-                        silent.send(response.getCoin().toString(), ctx.chatId());
                     }
+                    silent.send(response.getCoin().toString(), ctx.chatId());
+
                 })
                 .build();
     }
