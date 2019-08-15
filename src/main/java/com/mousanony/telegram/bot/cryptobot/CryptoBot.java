@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.telegram.abilitybots.api.objects.Locality.ALL;
 import static org.telegram.abilitybots.api.objects.Privacy.PUBLIC;
@@ -46,16 +45,16 @@ public class CryptoBot extends AbilityBot {
 
                     if (response.isError()) {
                         silent.send(response.getError(), ctx.chatId());
-                    }
-                    silent.send(response.getCoin().toString(), ctx.chatId());
-
-                    try {
-                        sender.execute(new SendMessage()
-                                .setChatId(ctx.chatId())
-                                .setParseMode(ParseMode.MARKDOWN)
-                                .setReplyMarkup(withButtons(response)));
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
+                    } else {
+                        try {
+                            sender.execute(new SendMessage()
+                                    .setChatId(ctx.chatId())
+                                    .setParseMode(ParseMode.MARKDOWN)
+                                    .setText(response.getCoin().toString())
+                                    .setReplyMarkup(withButtons(response)));
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
                     }
                 })
                 .build();
@@ -70,7 +69,7 @@ public class CryptoBot extends AbilityBot {
         // Create a keyboard row
         KeyboardRow row = new KeyboardRow();
         // Set each button, you can also use KeyboardButton objects if you need something else than text
-        row.add(response.getCoin().getSymbol() + " " + response.getCoin().getCustomSymbol());
+        row.add(response.getCoin().getSymbol() + " " + response.getCoin().getTargetCoin());
 
         keyboard.add(row);
         keyboardMarkup.setKeyboard(keyboard);

@@ -7,17 +7,17 @@ import java.math.BigDecimal;
  */
 public class ExtendedCoin extends Coin {
     private BigDecimal priceCustom;
-    private String customSymbol;
+    private String targetCoin;
 
-    public ExtendedCoin(Coin coin, BigDecimal priceCustom, String customSymbol) {
+    public ExtendedCoin(Coin coin, BigDecimal priceCustom, String targetCoin) {
         super(coin);
         this.priceCustom = priceCustom;
-        this.customSymbol = customSymbol;
+        this.targetCoin = targetCoin;
     }
 
     @Override
-    public String getCustomSymbol() {
-        return customSymbol;
+    public String getTargetCoin() {
+        return targetCoin;
     }
 
     @Override

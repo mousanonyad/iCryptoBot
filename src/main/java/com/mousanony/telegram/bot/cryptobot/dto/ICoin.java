@@ -16,7 +16,7 @@ public interface ICoin {
 
     String getSymbol();
 
-    String getCustomSymbol();
+    String getTargetCoin();
 
     Integer getRank();
 

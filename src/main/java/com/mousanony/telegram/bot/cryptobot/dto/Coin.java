@@ -28,6 +28,8 @@ public class Coin implements ICoin {
     private BigDecimal marketCapUsd;
     private BigDecimal amount;
 
+    private static final String USD = "USD";
+
     @Override
     public BigDecimal getMarketCapUsd() {
         return marketCapUsd;
@@ -80,8 +82,8 @@ public class Coin implements ICoin {
     }
 
     @Override
-    public String getCustomSymbol() {
-        return symbol;
+    public String getTargetCoin() {
+        return USD;
     }
 
     @Override

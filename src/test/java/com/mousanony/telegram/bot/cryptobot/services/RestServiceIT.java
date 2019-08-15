@@ -37,6 +37,6 @@ public class RestServiceIT {
     public void testGetPrice() {
         ICoin litecoin = restService.getCustomPrice("litecoin", "RUB");
         assertEquals(litecoin.getSymbol(), "LTC");
-        assertEquals(litecoin.getCustomSymbol(), "RUB");
+        assertEquals(litecoin.getTargetCoin(), "RUB");
     }
 }
