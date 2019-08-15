@@ -4,6 +4,16 @@ import com.mousanony.telegram.bot.cryptobot.services.RequestHandler;
 import com.mousanony.telegram.bot.cryptobot.services.Response;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.telegram.abilitybots.api.objects.Locality.ALL;
 import static org.telegram.abilitybots.api.objects.Privacy.PUBLIC;
@@ -39,8 +49,31 @@ public class CryptoBot extends AbilityBot {
                     }
                     silent.send(response.getCoin().toString(), ctx.chatId());
 
+                    try {
+                        sender.execute(new SendMessage()
+                                .setChatId(ctx.chatId())
+                                .setParseMode(ParseMode.MARKDOWN)
+                                .setReplyMarkup(withButtons(response)));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
                 })
                 .build();
     }
 
+    private ReplyKeyboard withButtons(Response response) {
+        // Create ReplyKeyboardMarkup object
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setResizeKeyboard(true);
+        // Create the keyboard (list of keyboard rows)
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        // Create a keyboard row
+        KeyboardRow row = new KeyboardRow();
+        // Set each button, you can also use KeyboardButton objects if you need something else than text
+        row.add(response.getCoin().getSymbol() + " " + response.getCoin().getCustomSymbol());
+
+        keyboard.add(row);
+        keyboardMarkup.setKeyboard(keyboard);
+        return keyboardMarkup;
+    }
 }
