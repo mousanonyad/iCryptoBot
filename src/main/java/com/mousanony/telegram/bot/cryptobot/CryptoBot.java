@@ -1,7 +1,7 @@
 package com.mousanony.telegram.bot.cryptobot;
 
 import com.mousanony.telegram.bot.cryptobot.services.RequestHandler;
-import com.mousanony.telegram.bot.cryptobot.services.Response;
+import com.mousanony.telegram.bot.cryptobot.view.Response;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;

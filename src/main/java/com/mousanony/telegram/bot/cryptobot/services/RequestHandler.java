@@ -2,6 +2,7 @@ package com.mousanony.telegram.bot.cryptobot.services;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mousanony.telegram.bot.cryptobot.dto.ICoin;
+import com.mousanony.telegram.bot.cryptobot.view.Response;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.math.BigDecimal;

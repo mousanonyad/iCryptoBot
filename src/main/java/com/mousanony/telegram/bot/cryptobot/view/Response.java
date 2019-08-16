@@ -1,4 +1,4 @@
-package com.mousanony.telegram.bot.cryptobot.services;
+package com.mousanony.telegram.bot.cryptobot.view;
 
 import com.mousanony.telegram.bot.cryptobot.dto.ICoin;
 
@@ -9,7 +9,7 @@ public class Response {
     private String error;
     private ICoin coin;
 
-    Response withError(String error) {
+    public Response withError(String error) {
         this.error = error;
         return this;
     }
@@ -18,7 +18,7 @@ public class Response {
         return error;
     }
 
-    Response withCoin(ICoin coin) {
+    public Response withCoin(ICoin coin) {
         this.coin = coin;
         return this;
     }
